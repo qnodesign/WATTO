@@ -1,2 +1,2 @@
 # WATTO
-WATTO ionic app
+WATTO ionic app v.2beta
