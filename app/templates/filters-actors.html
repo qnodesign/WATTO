@@ -1,0 +1,21 @@
+<ion-view view-title="<h3>{{actorsTitle}}</h3>">
+  <ion-content>
+   		
+	<ul class="list side-nav-container">
+	  <li>
+	     <button ng-click="resetGenres()" class="button button-full button-energized tl">Clear all</a>
+	  </li>
+	  <li ng-repeat="actor in actors" class="button button-full button-calm item-toggle tl">
+	     {{actor.name}}
+	  </li>
+	  <!--li>
+		<label class="item item-input">
+		  <i class="icon ion-search placeholder-icon"></i>
+		  <input type="text" placeholder="Search" ng-change="test()">
+		</label>
+	  </li-->
+
+	</ul>
+
+  </ion-content>
+</ion-view>

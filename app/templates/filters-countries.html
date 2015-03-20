@@ -1,0 +1,21 @@
+<ion-view view-title="<h3>{{countriesTitle}}</h3>">
+  <ion-content>
+   		
+	<ul class="list side-nav-container">
+	  <li>
+	     <button ng-click="resetLanguages()" class="button button-full button-energized tl">Reset all</a>
+	  </li>
+	  <li ng-repeat="country in countries" class="button button-full button-calm item-toggle tl">
+	     {{country.name}}
+	     <label class="toggle toggle-dark">
+	       <input type="checkbox" ng-model="selected_country[country.code]" ng-change="selectCountry()">
+	       <div class="track">
+	         <div class="handle"></div>
+	       </div>
+	     </label>
+	  </li>
+
+	</ul>
+
+  </ion-content>
+</ion-view>

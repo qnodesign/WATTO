@@ -1,0 +1,22 @@
+<ion-view view-title="<h3>{{releaseDateTitle}}</h3>">
+  <ion-content scroll="false">
+   		
+	<ul class="list side-nav-container form-inputs">
+
+	  <li class="item item-calm" style="padding-right: 4px" ng-class="{'item-assertive': wfd}">
+	     <label>
+	     	From <small ng-show="wfd">(invalid date)</small>
+	     </label>   
+	     <input type="date" ng-model="a" ng-change="setFromDate(a)" min="1920-01-01" max="{{today}}">
+	  </li>
+
+	  <li class="item item-calm" style="padding-right: 4px" ng-class="{'item-assertive': wtd}">
+	     <label>
+	     	To <small ng-show="wtd">(invalid date)</small>
+	     </label>
+	     <input type="date" ng-model="b" ng-change="setToDate(b)" min="{{toMin}}" max="{{tomorrow}}">
+	  </li>
+
+	</ul>
+  </ion-content>
+</ion-view>

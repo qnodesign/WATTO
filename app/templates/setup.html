@@ -1,0 +1,16 @@
+<ion-view view-title="<h3>{{title}}</h3>">
+	<ion-content scroll="false">
+
+		<h1><div class="wato-icon-panda"><i class="path1"></i></div></h1>
+
+		<h2><ins>W</ins>ATTO<br><small>version 0.01 BETA</small></h2>
+	    <p>What to watch today</p>
+	      <!--a href="#/app/watchlist" class="button button-full button-positive">My Watchlist</a-->
+	    <div class="bottom-box">
+	    	<p>Storage size: {{lsd}} MB</p>
+	    	<button ng-click="logout()" ng-show="facebookLoggedIn" class="button button-full button-assertive">Logout</button>
+	    	<button ng-click="killApp()" ng-show="facebookLoggedIn" class="button button-full button-assertive">Revoke app facebook permissions</button>
+	    	<button ng-click="clearAllData()" class="button button-full button-assertive">Clear all application data</button>
+		</div>
+	</ion-content>
+</ion-view>

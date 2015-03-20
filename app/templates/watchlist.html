@@ -1,0 +1,15 @@
+<ion-view cache-view="false" hide-back-button="false" view-title="<h3>{{title}}</h3>">
+  <ion-content>
+  <ion-refresher
+    pulling-text="Pull to refresh..."
+    on-refresh="doRefresh()">
+  </ion-refresher>
+	<ion-list>
+	    <a class="item item-dark item-thumbnail-left" ng-repeat="movie in watchlistDetails" href="#/app/getmovie/{{movie.id}}">
+	      <img ng-src="{{movie.posterSn}}>">
+	      <h2>{{movie.title}} {{movie.id}}</h2>
+	      <p>...</p>
+	    </a>
+    </ion-list>
+  </ion-content>
+</ion-view>

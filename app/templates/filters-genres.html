@@ -1,0 +1,21 @@
+<ion-view view-title="<h3>{{genresTitle}}</h3>">
+  <ion-content>
+   		
+	<ul class="list side-nav-container">
+	  <li>
+	     <button ng-click="resetGenres()" class="button button-full button-energized tl">Reset all</a>
+	  </li>
+	  <li ng-repeat="genre in genres track by $index" class="button button-full button-calm item-toggle tl">
+	     {{genre.name}}
+	     <label class="toggle toggle-dark">
+	       <input type="checkbox" ng-model="selectedGenre[genre.id]" ng-change="selectGenre()">
+	       <div class="track">
+	         <div class="handle"></div>
+	       </div>
+	     </label>
+	  </li>
+
+	</ul>
+
+  </ion-content>
+</ion-view>

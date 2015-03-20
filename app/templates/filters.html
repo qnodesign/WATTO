@@ -1,0 +1,15 @@
+<ion-view view-title="<h3>{{title}}</h3>">
+  <ion-content scroll="false">
+      <div class="side-nav-container">
+        <button ng-click="clearAllFilters()" class="button button-full button-energized tl">clear all filters</a>
+      </div>
+
+      <div class="side-nav-container filters">
+        <a href="#/app/filters-genres" class="button button-full button-calm tl">genres <small><span class="commalist" ng-repeat="s in sege">{{s}}</span></small></a>
+        <a href="#/app/filters-release-date" class="button button-full button-calm tl">release date <small>{{fromDate}}{{toDate}}</small></a>
+        <a href="#" ng-click="onlypro()" class="button button-full button-calm tl">actors</a>
+        <a href="#" ng-click="onlypro()" class="button button-full button-calm tl">countries</a>
+        <a href="#" ng-click="onlypro()" class="button button-full button-calm tl">movie length</a>
+      </div>
+  </ion-content>
+</ion-view>

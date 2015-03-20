@@ -1,0 +1,41 @@
+<ion-side-menus enable-menu-with-back-views="false">
+  <ion-side-menu-content>
+    <ion-nav-bar class="bar-dark">
+      <ion-nav-back-button class="button-icon button-clear ion-ios-arrow-left">
+      </ion-nav-back-button>
+
+      <ion-nav-buttons side="left">
+        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button>
+        <a ng-show="topMenu.isLeftMenuHref" ng-class="topMenu.leftMenuClass" class="button button-clear" href="{{topMenu.leftMenuHref}}">{{topMenu.leftMenuLabel}}</a>
+        <button ng-show="topMenu.isLeftMenu" ng-class="topMenu.leftMenuClass" class="button button-clear" ng-click="topMenu.leftMenuAction()">{{topMenu.leftMenuLabel}}</button>
+      </ion-nav-buttons>
+
+      <ion-nav-buttons side="right">
+        <a ng-show="topMenu.isRightMenuHref" ng-class="topMenu.rightMenuClass" class="button button-clear" href="{{topMenu.rightMenuHref}}">{{topMenu.rightMenuLabel}}</a>
+        <button ng-show="topMenu.isRightMenu" ng-class="topMenu.rightMenuClass" class="button button-clear" ng-click="topMenu.rightMenuAction()">{{topMenu.rightMenuLabel}}</button>
+      </ion-nav-buttons>
+
+    </ion-nav-bar>
+    <ion-nav-view name="menuContent"></ion-nav-view>
+  </ion-side-menu-content>
+
+  <ion-side-menu side="left">
+    <ion-header-bar class="bar-dark">
+      <h1 class="title"></h1>
+    </ion-header-bar>
+    <ion-content>
+      <div class="side-nav-container">
+        <a href="#/app/home" nav-clear menu-close class="button button-full button-positive tl"><i class="icon ion-ios-home"></i>home</a>
+        <a href="#/app/profile" ng-show="facebookLoggedIn" nav-clear menu-close class="button button-full button-positive tl"><i class="icon ion-ios-user"></i>profile</a>
+        <a href="#/app/recent" nav-clear menu-close class="button button-full button-positive tl"><i class="icon ion-ios-list"></i>recent</a>
+        <a href="#/app/favorites" nav-clear menu-close class="button button-full button-positive tl"><i class="icon ion-ios-star"></i>favorites</a>
+        <a href="#/app/watchlist"  ng-show="facebookLoggedIn" nav-clear menu-close class="button button-full button-positive tl"><i class="icon ion-ios-eye"></i>watchlist</a>
+        <a href="#/app/removed" nav-clear menu-close class="button button-full button-positive tl"><i class="icon ion-ios-trash"></i>Movies I've already seen</a>
+      </div>
+
+    </ion-content>
+  </ion-side-menu>
+
+</ion-side-menus>
+

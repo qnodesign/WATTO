@@ -1,0 +1,90 @@
+<ion-view cache-view="false" hide-back-button="true" view-title="<h3>{{title}}</h3>" class="getMovie">
+  
+  <img ng-src="{{posterBg}}" class="backgroundImage" ng-class="{'inloading': loading, 'hidden': hcover}" imageonload="hcover = false"/>
+
+  <ion-content scroll="false">
+
+    <img class="imageplaceholder" ng-src="{{movie.poster}}" imageonload="hideLoading()" />
+    <div ng-hide="loading" class="result">
+
+         	<div class="details">
+            <div class="imagesAndFacts">
+
+              <button ng-click="toWatchList()" ng-hide="onTheWatchList" class="watchlist to"><span class="ion-plus"></span></button>
+              <button ng-click="removeFromWatchList()" ng-show="onTheWatchList" class="watchlist remove"><span class="ion-checkmark"></span></button>
+
+              <img ng-src="{{movie.posterTn}}" imageonload="tnloaded = true" />
+              <a ng-show="showTrailer" href="#/app/youtube-video/{{videoId}}" class="button button-energized button-block button-outline button-small">Watch Trailer</a>
+              <div class="tnImagePlaceholder" ng-hide="tnloaded"><ion-spinner icon="ios" class="spinner-energized"></ion-spinner></div>
+ 
+              <p ng-show="movie.genres != ''"><small><span class="commalist" ng-repeat="genre in movie.genres | limitTo:3">{{genre.name}}</span></small></p>
+
+              <p ng-show="movie.director"><small><strong>Director</strong><br />{{movie.director}}</small></p>
+
+              <p ng-show="movie.actors"><small><strong>Cast</strong><br /><span class="commalist" ng-repeat="actor in movie.actors | limitTo:3">{{actor}}</span></small></p>
+            </div>   
+
+            <ion-scroll has-bouncing="false" delegate-handle="detailsContainer" class="detailsInner">
+
+  	         	<h2>{{movie.title}}<br /><small ng-show="movie.otitle != movie.title">({{movie.otitle}})</small></h2>
+              <p>
+                <small ng-show="movie.released.length">{{movie.released}}</small>
+                <span ng-show="movie.countries.length">
+                  <small>(</small><small ng-show="movie.countries != ''"><span class="commalist" ng-repeat="country in movie.countries">{{country.iso_3166_1}}</span></small><small>)</small>
+                </span>
+              </p>
+              <div ng-controller="RatingCtrl" ng-show="movie.votes" class="ratingContainer">
+                <rating ng-model="rate" max="max" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="overStar = null"></rating>{{rate}} of {{max}}
+              </div>
+              <p ng-show="movie.overview != ''">{{movie.overview}}</p>
+              
+
+            </ion-scroll>
+    			</div>
+
+    </div>
+    <div class="btnGroup">
+      <button class="button b-first"></button> 
+      <a href="#/app/recent" class="button button-clear button-icon ion-arrow-left-a">
+          <span>recent</span>
+      </a>
+      <a href="#/app/filters" class="button button-clear button-icon ion-ios-toggle">
+          <span>filters</span>
+      </a>
+      <button ng-click="gimmeNew()" class="button button-clear button-icon button-large wato-icon-panda">
+          <div class="path1"></div>
+          <div class="path2"></div>
+          <span>shuffle</span>
+      </button>
+      <button ng-click="sendEmail()" class="button button-clear button-icon button-l ion-ios-star">
+          <span>to favorites</span>
+      </button>
+      <button ng-click="watchList()" class="button button-clear button-icon ion-ios-trash">
+          <span>'ve seen it</span>
+      </button>
+    </div>
+
+  </ion-content>
+
+
+  
+    <!--div class="tabs tabs-energized tabs-icon-top" style="position:absolute; bottom: 0; z-index: 3000">
+      <a href="#/app/filters" class="tab-item">
+        <i class="icon ion-ios-toggle"></i>
+        Filters
+      </a>
+      <a class="tab-item" ng-click="gimmeNew()">
+        <i class="wato-icon-panda">
+          <div class="path1"></div>
+          <div class="path2"></div>
+        </i>
+        Shuffle
+      </a>
+      <a class="tab-item" ng-click="toFavorites()">
+        <i class="icon ion-ios-star"></i>
+        Add to favorites
+      </a>
+    </div-->
+ 
+
+</ion-view>
