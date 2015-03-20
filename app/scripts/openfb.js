@@ -134,7 +134,7 @@ var openFB = (function () {
 
         // START INSERT: These three lines are necessary for making this work on a real mobile device: 
         if (runningInCordova) {
-            oauthRedirectURL = 'https://www.facebook.com/connect/login_success.html';
+            // oauthRedirectURL = 'https://www.facebook.com/connect/login_success.html';
         }
         // END INSERT
 

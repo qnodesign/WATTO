@@ -47,7 +47,9 @@ angular.module('watto', ['ionic', 'watto.controllers'])
 
 .config(function($stateProvider, $urlRouterProvider) {
 
-  openFB.init({appId: '734151323370803'});
+  //openFB.init({appId: '734151323370803'});
+  //openFB.init('734151323370803', 'http://localhost:8080/oauthcallback.html', window.sessionStorage);
+  openFB.init({appId: '734151323370803', tokenStore: window.sessionStorage});
 
   $stateProvider
 

@@ -57,6 +57,7 @@
     "org.apache.cordova.console",
     "com.ionic.keyboard",
     "org.apache.cordova.inappbrowser",
+    "org.apache.cordova.inappbrowser",
     "org.apache.cordova.inappbrowser"
   ]
 }

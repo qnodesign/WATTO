@@ -64,10 +64,6 @@ angular.module('watto.controllers', ['ui.bootstrap'])
                 error(function(err){
                   $log.log('DB error: ' + err);
                 });      
-
-              $scope.$apply(function() {
-                  
-              });
           },
           error: function(error) {
               $log.log('Facebook error message: ' + error.message + ' Type: ' + error.type + ', Code: ' + error.code);
