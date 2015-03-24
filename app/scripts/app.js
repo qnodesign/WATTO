@@ -185,16 +185,6 @@ angular.module('watto', ['ionic', 'watto.controllers'])
         controller: 'FiltersCtrl'
       }
     }
-  })
-
-  .state('app.single', {
-    url: '/playlists/:playlistId',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
-      }
-    }
   });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/home');

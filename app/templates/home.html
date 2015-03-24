@@ -1,14 +1,14 @@
-<ion-view view-title="<h3>{{title}}</h3>">
+<ion-view hide-back-button="true" view-title="<h3>{{title}}</h3>">
 	<ion-content scroll="false">
 	    <div class="bg-img-container animate-show" ng-hide="hcover" ng-style="{'background-image': 'url(images/posters_n.jpg)'}">
         	<img class="bg-images" imageonload="hcover = false" ng-src="images/posters_n.jpg">
         </div>
 	    <div class="btn-container">
-	      <a href="#/app/getmovie" class="button button-full button-calm">What to watch tonight?</a>
+	      <a href="#/app/getmovie" class="button button-full button-large button-calm">What to watch tonight?</a>
 	      <a href="#/app/filters" class="button button-full button-energized">Configure filters</a>
 
-		    <button ng-hide="facebookLoggedIn" class="button button-full button-positive" ng-click="fbLogin()">
-		        Login with Facebook
+			<button ng-hide="facebookLoggedIn || loggedIn" class="button button-full button-energized" ng-click="login()">
+		        Signup / Login
 		    </button>
 
 	      <!--a href="#/app/watchlist" class="button button-full button-positive">My Watchlist</a-->

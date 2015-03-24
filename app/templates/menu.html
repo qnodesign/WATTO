@@ -5,8 +5,8 @@
       </ion-nav-back-button>
 
       <ion-nav-buttons side="left">
-        <button class="button button-icon button-clear ion-navicon" menu-toggle="left">
-        </button>
+        <!--button class="button button-icon button-clear ion-navicon" menu-toggle="left">
+        </button-->
         <a ng-show="topMenu.isLeftMenuHref" ng-class="topMenu.leftMenuClass" class="button button-clear" href="{{topMenu.leftMenuHref}}">{{topMenu.leftMenuLabel}}</a>
         <button ng-show="topMenu.isLeftMenu" ng-class="topMenu.leftMenuClass" class="button button-clear" ng-click="topMenu.leftMenuAction()">{{topMenu.leftMenuLabel}}</button>
       </ion-nav-buttons>
@@ -27,11 +27,11 @@
     <ion-content>
       <div class="side-nav-container">
         <a href="#/app/home" nav-clear menu-close class="button button-full button-positive tl"><i class="icon ion-ios-home"></i>home</a>
-        <a href="#/app/profile" ng-show="facebookLoggedIn" nav-clear menu-close class="button button-full button-positive tl"><i class="icon ion-ios-user"></i>profile</a>
+        <a href="#/app/profile" ng-show="facebookLoggedIn || loggedIn" nav-clear menu-close class="button button-full button-positive tl"><i class="icon ion-ios-person"></i>profile</a>
         <a href="#/app/recent" nav-clear menu-close class="button button-full button-positive tl"><i class="icon ion-ios-list"></i>recent</a>
-        <a href="#/app/favorites" nav-clear menu-close class="button button-full button-positive tl"><i class="icon ion-ios-star"></i>favorites</a>
-        <a href="#/app/watchlist"  ng-show="facebookLoggedIn" nav-clear menu-close class="button button-full button-positive tl"><i class="icon ion-ios-eye"></i>watchlist</a>
-        <a href="#/app/removed" nav-clear menu-close class="button button-full button-positive tl"><i class="icon ion-ios-trash"></i>Movies I've already seen</a>
+        <a href="" ng-click="onlypro('Favorites')" ng-show="facebookLoggedIn || loggedIn" nav-clear menu-close class="button button-full button-positive tl"><i class="icon ion-ios-star"></i>favorites</a-->
+        <a href="#/app/watchlist"  ng-show="facebookLoggedIn || loggedIn" nav-clear menu-close class="button button-full button-positive tl"><i class="icon ion-ios-eye"></i>watchlist</a>
+        <a href="" ng-show="facebookLoggedIn || loggedIn" ng-click="onlypro('Ignore already seen movies')" nav-clear menu-close class="button button-full button-positive tl"><i class="icon ion-ios-trash"></i>Movies I've already seen</a>
       </div>
 
     </ion-content>

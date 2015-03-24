@@ -8,8 +8,8 @@
 	      <!--a href="#/app/watchlist" class="button button-full button-positive">My Watchlist</a-->
 	    <div class="bottom-box">
 	    	<p>Storage size: {{lsd}} MB</p>
-	    	<button ng-click="logout()" ng-show="facebookLoggedIn" class="button button-full button-assertive">Logout</button>
-	    	<button ng-click="killApp()" ng-show="facebookLoggedIn" class="button button-full button-assertive">Revoke app facebook permissions</button>
+	    	<button ng-click="logout()" ng-show="facebookLoggedIn || loggedIn" class="button button-full button-assertive">Logout</button>
+	    	<button ng-click="killApp()" ng-show="facebookLoggedIn" class="button button-full button-assertive">Revoke facebook permissions</button>
 	    	<button ng-click="clearAllData()" class="button button-full button-assertive">Clear all application data</button>
 		</div>
 	</ion-content>

@@ -1,13 +1,135 @@
 'use strict';
 var openFB = openFB || {};
 
-angular.module('watto.controllers', ['ui.bootstrap'])
+angular.module('watto.controllers', ['ionic.rating'])
 
-.controller('AppCtrl', function($scope, $rootScope, $http, $location, $ionicSideMenuDelegate, $ionicActionSheet, $ionicLoading, $log) {
+.controller('AppCtrl', function($scope, $state, $rootScope, $http, $location, $ionicModal, $ionicPopup, $ionicSideMenuDelegate, $ionicActionSheet, $ionicLoading, $timeout, $log) {
+
+
+  $scope.onlypro = function(p){
+     $ionicPopup.alert({
+       title: '',
+       template: (p ? p : 'This')+' feature is available only in WATTO PRO'
+     });
+  };
 
   // PRIVATE DB
   $rootScope.db_host = 'http://wapi-qno.rhcloud.com/ws/';
   //$rootScope.db_host = 'localhost:8080/ws/';
+           /*   var a = {
+                'id':'10205266640638487',
+                'email':'hefelle@gmail.hu',
+                'name':'Konrád Hefelle'
+              };
+
+              $http.post('http://wapi-qno.rhcloud.com/ws/user', a).
+                success(function(data){
+                  $log.log('User logged in and DB record syncronized ' + data);
+                }); */
+
+  var generateToken = function(limit,possible) {
+      var token ='';
+
+      limit = limit || 35;
+      possible = possible || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; //'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.,_:?"+%/=()';
+
+      for( var i=0; i < limit; i++ ) {
+          token += possible.charAt(Math.floor(Math.random() * possible.length));
+      }
+      return token;
+  };
+
+  var tokenExpire = function(days) {
+    days = days || 30;
+    return new Date().getTime() + (days * 24 * 60 * 60 * 1000);
+  };
+
+  var setWatchlist = function(user) {
+    $rootScope.user = user;
+//    $log.log($rootScope.user);
+    $http.get($rootScope.db_host + 'watchlist/' + user.id).
+        success(function(data){
+            var res = data.length ? data[0].results : [];
+            localStorage.setItem('movies.watchlistDetails',angular.toJson(res));
+            var wl = [];
+            angular.forEach(res,function(k){
+                wl.push(k.id);
+            });
+            localStorage.setItem('movies.watchlist',angular.toJson(wl));      
+        });
+  };
+
+  var tokenUpdate = function(user){
+      user.token = generateToken();
+      user.texpire = tokenExpire();
+      localStorage.setItem('user',angular.toJson(user));
+      delete user._id;
+      $http.post($rootScope.db_host + 'user', user).
+        success(function(data){
+            $log.log('User token updated ' + data);
+        }).
+        error(function(err){
+          $log.log('DB error: ' + err);
+        });    
+  };
+
+
+  // LOGIN
+  $scope.loginData = {};
+
+  $ionicModal.fromTemplateUrl('templates/login.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.loginModal = modal;
+  });
+
+  $scope.closeLogin = function() {
+    $scope.loginModal.hide();
+  };
+
+  $scope.login = function() {
+    $scope.loginModal.show();
+  };
+
+  $scope.doLogin = function() {
+    $http.get($rootScope.db_host + 'user/' + $scope.loginData.email).
+      success(function(data){
+        var user = data[0];
+        if(data.length && user.password === $scope.loginData.password) {
+          tokenUpdate(user);
+          $rootScope.loggedIn = true;
+          setWatchlist(user);
+          $timeout(function() {
+            $scope.closeLogin();
+          }, 300);
+        } else {
+          $log.log('No record in DB');
+        }
+      }).
+      error(function(data){
+        $log.log('user get failed '+data);
+      });
+    
+    console.log('Doing login', $scope.loginData);
+  };
+
+
+
+  // SIGNUP
+
+  $scope.signupData = {};
+
+  $ionicModal.fromTemplateUrl('templates/signup.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.signupModal = modal;
+  });
+
+  $scope.signup = function() {
+    $scope.signupModal.show();
+  };
+
+
 
   // FACEBOOK LOGIN
   $scope.fbInit = function() {
@@ -16,36 +138,23 @@ angular.module('watto.controllers', ['ui.bootstrap'])
     //localStorage.removeItem('user');
     //localStorage.setItem('user','{"id": "10205266640638487", "name": "Konrád Hefelle"}');
     var user = angular.fromJson(localStorage.getItem('user'));
-
-    var setWatchlist = function(user) {
-      $rootScope.user = user;
-      $rootScope.facebookLoggedIn = true;
-      $http.get($rootScope.db_host + 'watchlist/' + user.id).
-          success(function(data){
-              var res = data.length ? data[0].results : [];
-              localStorage.setItem('movies.watchlistDetails',angular.toJson(res));
-              var wl = [];
-              angular.forEach(res,function(k){
-                  wl.push(k.id);
-              });
-              localStorage.setItem('movies.watchlist',angular.toJson(wl));      
-          });
-    };
-
     
     if(user !== null) {
-      $http.get($rootScope.db_host + 'user/' + user.id).
+      $http.get($rootScope.db_host + 'user/' + user.email).
         success(function(data){
           if(data.length) {
-            setWatchlist(data[0]);
-
-            /*$http.post($rootScope.db_host + 'watchlist',{'uid': user.id, 'results': localStorage.getItem('movies.watchlist')}).
-              success(function(data){
-                $log.log(data);
-              }).
-              error(function(data){
-                $log.log(data);
-              });*/  
+            var user = data[0];
+            if(user.token && user.texpire > new Date().getTime()) { // 30 days in timestamp
+                $log.log('not expired token');
+            } else {
+                tokenUpdate(user);   
+            }
+            if(user.password) {
+                $rootScope.loggedIn = true;
+            } else {
+                $rootScope.facebookLoggedIn = true;
+            }
+            setWatchlist(user);
           } else {
             $log.log('No record in DB based on the local storage');
           }
@@ -55,15 +164,9 @@ angular.module('watto.controllers', ['ui.bootstrap'])
           path: '/me',
           params: {fields: 'id,name,email'},
           success: function(user) {
-              localStorage.setItem('user', angular.toJson(user));
-              $http.post($rootScope.db_host + 'user', user).
-                success(function(data){
-                  $log.log('User logged in and DB record syncronized ' + data);
-                  setWatchlist(user);
-                }).
-                error(function(err){
-                  $log.log('DB error: ' + err);
-                });      
+              tokenUpdate(user);
+              $rootScope.facebookLoggedIn = true;
+              setWatchlist(user);
           },
           error: function(error) {
               $log.log('Facebook error message: ' + error.message + ' Type: ' + error.type + ', Code: ' + error.code);
@@ -94,14 +197,22 @@ angular.module('watto.controllers', ['ui.bootstrap'])
 
   $scope.logout = function() {
     $log.log('logout');
-    $rootScope.facebookLoggedIn = false;
-    openFB.logout( function() {
-        $log.log('Facebook successfully logged out');
-          localStorage.removeItem('user');
-      }, function(error) {
-          $rootScope.facebookLoggedIn = true;
-          $log.log('Facebook error message: ' + error.message + ' Type: ' + error.type + ', Code: ' + error.code);
-      });
+    if($rootScope.loggedIn) {
+        $rootScope.loggedIn = false;
+        localStorage.removeItem('user');
+        $state.go('app.home');
+    }
+    if($rootScope.facebookLoggedIn) {
+        $rootScope.facebookLoggedIn = false;
+        openFB.logout( function() {
+            $log.log('Facebook successfully logged out');
+            localStorage.removeItem('user');
+            $state.go('app.home');
+          }, function(error) {
+              $rootScope.facebookLoggedIn = true;
+              $log.log('Facebook error message: ' + error.message + ' Type: ' + error.type + ', Code: ' + error.code);
+          });
+    }
   };
 
   $scope.killApp = function() {
@@ -112,6 +223,7 @@ angular.module('watto.controllers', ['ui.bootstrap'])
         $http.post($rootScope.db_host + 'deluser', localStorage.getItem('user')).
           success(function(data){
             localStorage.removeItem('user');
+            $state.go('app.home');
             $log.log(data);
           }).
           error(function(err){
@@ -184,12 +296,25 @@ angular.module('watto.controllers', ['ui.bootstrap'])
     $ionicSideMenuDelegate.toggleLeft();
   };
   $scope.editAvalilable = function() {
-    $rootScope.editAvalilable = $rootScope.editAvalilable === true ? false : true;
+    $rootScope.editActive = $rootScope.editActive === true ? false : true;
+    if($rootScope.editActive) {
+      $scope.topMenu.rightMenuLabel = 'Cancel';
+      $scope.deleteTopMenuLeft();
+    } else {
+      $scope.topMenu.rightMenuLabel = 'Edit';
+      $scope.baseTopMenuLeft();
+    }
   };
   
+  $scope.deleteEditedAction = function() {
+      $log.log('delete');
+  };
+
  // initial state of app
   $scope.topMenu = { 
-    isLeftAction : false,
+    isLeftMenu : true,
+    leftMenuClass : 'button-icon ion-navicon',
+    leftMenuAction : $scope.toggleLeftSideMenu,      
     isRightMenuHref : true,
     rightMenuHref : '#/app/setup', 
     rightMenuClass : 'button-icon ion-ios-gear-outline'
@@ -199,12 +324,46 @@ angular.module('watto.controllers', ['ui.bootstrap'])
     $scope.topMenu = {};
   });
 
-  $scope.$on('$ionicView.afterLeave', function(){
-    switch($location.url().split('/')[2]) {
-      case 'home':
+  $scope.baseTopMenuLeft = function(){
+        $scope.topMenu.isLeftMenu = true;
+        $scope.topMenu.leftMenuClass = 'button-icon ion-navicon';
+        $scope.topMenu.leftMenuLabel = '';
+        $scope.topMenu.leftMenuAction = $scope.toggleLeftSideMenu;      
+  };
+
+  $scope.deleteTopMenuLeft = function(){
+        $scope.topMenu.isLeftMenu = true;
+        $scope.topMenu.leftMenuClass = '';
+        $scope.topMenu.leftMenuLabel = 'Delete';
+        $scope.topMenu.leftMenuAction = $scope.deleteEditedAction;    
+  };
+
+  $scope.baseTopMenu = function(){
+        $scope.baseTopMenuLeft();
         $scope.topMenu.isRightMenuHref = true;
         $scope.topMenu.rightMenuHref = '#/app/setup'; 
         $scope.topMenu.rightMenuClass = 'button-icon ion-ios-gear-outline';
+  };
+
+  $scope.$on('$ionicView.afterLeave', function(){
+    switch($location.url().split('/')[2]) {
+      case 'profile':
+        $scope.baseTopMenu();
+      break;   
+      case 'recent':
+        $scope.baseTopMenuLeft();
+        $scope.topMenu.isRightMenu = true;
+        $scope.topMenu.rightMenuLabel = 'Edit';
+        $scope.topMenu.rightMenuAction = $scope.editAvalilable; 
+      break;   
+      case 'home':
+        $scope.baseTopMenu();
+      break;  
+      case 'watchlist':
+        $scope.baseTopMenuLeft();
+        $scope.topMenu.isRightMenu = true;
+        $scope.topMenu.rightMenuLabel = 'Edit';
+        $scope.topMenu.rightMenuAction = $scope.editAvalilable; 
       break;   
 
       case 'filters-actors':
@@ -431,13 +590,6 @@ angular.module('watto.controllers', ['ui.bootstrap'])
     $scope.setupDates();
   });
 
-  $scope.onlypro = function(){
-     $ionicPopup.alert({
-       title: '',
-       template: 'This feature is available only in WATTO PRO'
-     });
-  };
-
  // ------------------ ALL FILTERS 
 
   $scope.clearAllFilters = function(){
@@ -479,19 +631,6 @@ angular.module('watto.controllers', ['ui.bootstrap'])
   $scope.video = 'http://www.youtube.com/embed/'+$stateParams.videoId+'?autoplay=1&cc_load_policy=1';
 })
 
-.controller('RatingCtrl', function($scope) {
-  $scope.max = 5;
-  $scope.isReadonly = true;
-
-  $scope.ratingStates = [
-    {stateOn: 'glyphicon-ok-sign', stateOff: 'glyphicon-ok-circle'},
-    {stateOn: 'glyphicon-star', stateOff: 'glyphicon-star-empty'},
-    {stateOn: 'glyphicon-heart', stateOff: 'glyphicon-ban-circle'},
-    {stateOn: 'glyphicon-heart'},
-    {stateOff: 'glyphicon-off'}
-  ];
-})
-
 .controller('RecentCtrl', function($scope) {
 
   $scope.title = 'RECENT MOVIES';
@@ -516,7 +655,6 @@ angular.module('watto.controllers', ['ui.bootstrap'])
 })
 
 .controller('GetMovieCtrl', function($scope, $http, $state, $stateParams, $timeout, $rootScope, $location, $ionicLoading, $ionicScrollDelegate, $log) {
-
 
   $scope.title = '<ins>W</ins>ATTO';
   // init values
@@ -588,18 +726,18 @@ angular.module('watto.controllers', ['ui.bootstrap'])
 
   $scope.render = function(data) {
     $scope.movie = data;
-    $rootScope.rate = parseInt(data.vote_average*10)/20;
+
+// rating
+
+    $scope.max = 10;
+    $scope.rate = parseInt(data.average*10)/10;
+
     $scope.posterBg = $scope.movie.poster;
     $scope.movie.actors = [];
+
     if($rootScope.facebookLoggedIn) {
         $scope.onTheWatchList = $scope.watchlist.indexOf(data.id) !== -1  ? true : false; // for sho
-    }
-    if($scope.movie && data.title === $scope.movie.title)  {
-      //$scope.hideLoading();
-    } else {
-      
-    }
-      
+    }  
 
   // trailers
       $scope.showTrailer = false;
@@ -665,6 +803,7 @@ angular.module('watto.controllers', ['ui.bootstrap'])
               countries: data.production_countries,
               otitle: data.original_title,
               votes: data.vote_count,
+              average: data.vote_average,
               poster: data.poster_path === null ? 'images/empty.png': 'https://image.tmdb.org/t/p/w396'+data.poster_path,  // original, 396, 185
               posterTn: data.poster_path === null ? 'images/empty_tn.png' : 'https://image.tmdb.org/t/p/w185'+data.poster_path,  // original, 396, 185
               posterSn: data.poster_path === null ? 'images/empty_tn.png' : 'https://image.tmdb.org/t/p/w75'+data.poster_path,  // original, 396, 185
@@ -830,7 +969,6 @@ angular.module('watto.controllers', ['ui.bootstrap'])
     }
 
     if (!firstTime && !$stateParams.movieId && !filterChange) { // i was here before so i generated a movie before I want to show that specific movie.
-      $log.log('if 1');
       movieData = $scope.recentMoviesDetails[$rootScope.actualMovieIndex];
       $scope.render(movieData,true);
     } else if($stateParams.movieId) {
@@ -854,7 +992,6 @@ angular.module('watto.controllers', ['ui.bootstrap'])
       $scope.render(movieData,true);
       $rootScope.actualMovieIndex = index;
     } else {
-      $log.log('if 4');
       $rootScope.actualMovieIndex = 0;
       $scope.getData();
     }

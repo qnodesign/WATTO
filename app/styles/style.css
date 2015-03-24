@@ -151,7 +151,7 @@ h3 {
 }
 
 .title h3 {
-  padding: 11px 0 0;
+  padding: 8px 0 0;
 }
 
 p {
@@ -193,6 +193,8 @@ a {
 
 .side-nav-container .icon {
 	float: right;
+  width: 25px;
+  text-align: center;
 }
 
 .side-nav-container.filters small {
@@ -469,6 +471,17 @@ img.backgroundImage.hidden {
   padding: 0 10px;
 }
 
+ul.rating {
+  display: inline-block;
+  padding-right: 2px;
+}
+ul.rating li {
+  display: inline;
+  border: 0px;
+  background: none;
+  padding: 0;
+}
+
 .result .imagesAndFacts .tnImagePlaceholder {
 position: absolute;
   z-index: 300;
@@ -644,5 +657,24 @@ position: absolute;
 
 .watchlist.remove {
   background: rgba(145,172,57,.7);
+}
+
+
+/* modal */
+
+.bar .title {
+  line-height: 32px;
+}
+
+.modal {
+  background: rgba(0,0,0,.7);
+}  
+.modal .bar {
+  background-image: none;
+  background: #000;
+}  
+
+.item-energized ::-webkit-input-placeholder { /* WebKit browsers */
+    color: #666;
 }
 

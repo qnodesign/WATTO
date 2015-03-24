@@ -4,9 +4,8 @@
   "dependencies": {
     "ionic": "master",
     "ionicons": "master",
-    "ngCordova": "0.1.12-alpha",
-    "bootstrap": "*",
-    "angular-bootstrap": "*"
+    "ionic-rating": "master",
+    "ngCordova": "0.1.12-alpha"
   },
   "devDependencies": {
     "angular-mocks": "~1.3.6",

@@ -9,10 +9,10 @@
 
          	<div class="details">
             <div class="imagesAndFacts">
-
+              <span ng-show="facebookLoggedIn || loggedIn">
               <button ng-click="toWatchList()" ng-hide="onTheWatchList" class="watchlist to"><span class="ion-plus"></span></button>
               <button ng-click="removeFromWatchList()" ng-show="onTheWatchList" class="watchlist remove"><span class="ion-checkmark"></span></button>
-
+              </span>  
               <img ng-src="{{movie.posterTn}}" imageonload="tnloaded = true" />
               <a ng-show="showTrailer" href="#/app/youtube-video/{{videoId}}" class="button button-energized button-block button-outline button-small">Watch Trailer</a>
               <div class="tnImagePlaceholder" ng-hide="tnloaded"><ion-spinner icon="ios" class="spinner-energized"></ion-spinner></div>
@@ -33,8 +33,8 @@
                   <small>(</small><small ng-show="movie.countries != ''"><span class="commalist" ng-repeat="country in movie.countries">{{country.iso_3166_1}}</span></small><small>)</small>
                 </span>
               </p>
-              <div ng-controller="RatingCtrl" ng-show="movie.votes" class="ratingContainer">
-                <rating ng-model="rate" max="max" readonly="isReadonly" on-hover="hoveringOver(value)" on-leave="overStar = null"></rating>{{rate}} of {{max}}
+              <div ng-show="movie.votes" class="ratingContainer">
+                <rating ng-model="rate" max="10"></rating>{{rate}} of {{max}}
               </div>
               <p ng-show="movie.overview != ''">{{movie.overview}}</p>
               
@@ -56,35 +56,14 @@
           <div class="path2"></div>
           <span>shuffle</span>
       </button>
-      <button ng-click="sendEmail()" class="button button-clear button-icon button-l ion-ios-star">
+      <button ng-click="onlypro('Favorites')" class="button button-clear button-icon button-l ion-ios-star">
           <span>to favorites</span>
       </button>
-      <button ng-click="watchList()" class="button button-clear button-icon ion-ios-trash">
+      <button ng-click="onlypro('Ignore already seen movies')" class="button button-clear button-icon ion-ios-trash">
           <span>'ve seen it</span>
       </button>
     </div>
 
   </ion-content>
-
-
-  
-    <!--div class="tabs tabs-energized tabs-icon-top" style="position:absolute; bottom: 0; z-index: 3000">
-      <a href="#/app/filters" class="tab-item">
-        <i class="icon ion-ios-toggle"></i>
-        Filters
-      </a>
-      <a class="tab-item" ng-click="gimmeNew()">
-        <i class="wato-icon-panda">
-          <div class="path1"></div>
-          <div class="path2"></div>
-        </i>
-        Shuffle
-      </a>
-      <a class="tab-item" ng-click="toFavorites()">
-        <i class="icon ion-ios-star"></i>
-        Add to favorites
-      </a>
-    </div-->
  
-
 </ion-view>
